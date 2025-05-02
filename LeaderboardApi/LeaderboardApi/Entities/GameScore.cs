@@ -13,11 +13,11 @@ public class GameScore
     
     [ForeignKey("GameId")] public int GameId { get; set; }
 
-    public required Game Game { get; set; }
+    public Game? Game { get; set; }
     
     [ForeignKey("PlayerId")] public int PlayerId { get; set; }
 
-    public required Player Player { get; set; }
+    public Player? Player { get; set; }
 
     public double Score { get; set; }
 

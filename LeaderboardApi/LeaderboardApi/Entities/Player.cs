@@ -8,6 +8,8 @@ namespace LeaderboardApi.Entities;
 public class Player
 {
     [Key] public int Id { get; set; }
+    
+    public required string Name { get; set; }
 
     public required int UserId { get; set; }
 
@@ -15,8 +17,6 @@ public class Player
     /// User can be deleted, however Player's records will stay.
     /// </summary>
     public User? User { get; set; }
-    
-    public required string Name { get; set; }
     
     public List<GameScore>? GameScores { get; set; }
 }
