@@ -13,5 +13,5 @@ public interface ILeaderboardDbContext
 
     public DbSet<GameScore> GameScores { get; set; }
 
-    int SaveChanges();
+    int Save();
 }

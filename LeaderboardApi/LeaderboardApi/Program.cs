@@ -1,3 +1,4 @@
+using AutoMapper;
 using LeaderboardApi.DbOperations;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,8 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddDbContext<LeaderboardDbContext>(x => x.UseInMemoryDatabase("LeaderboardDB"));
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddScoped<ILeaderboardDbContext>(provider => provider.GetService<LeaderboardDbContext>()!);
 
 var app = builder.Build();
 
@@ -23,5 +27,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapControllers();
 
 app.Run();
