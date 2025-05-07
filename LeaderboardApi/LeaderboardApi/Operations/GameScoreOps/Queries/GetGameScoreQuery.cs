@@ -6,6 +6,8 @@ namespace LeaderboardApi.Operations.GameScoreOps.Queries;
 
 public class GetGameScoreQuery
 {
+    public int Id { get; set; }
+    
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;
 
@@ -26,6 +28,23 @@ public class GetGameScoreQuery
         var gameScoreViewModels = _mapper.Map<List<GameScoreViewModel>>(gameScores);
         
         return gameScoreViewModels;
+    }
+    
+    public GameScoreViewModel HandleWithId()
+    {
+        var gameScore = _dbContext.GameScores
+            .Include(x => x.Game)
+            .Include(x => x.Player)
+            .SingleOrDefault(x => x.Id == Id);
+
+        if (gameScore is null)
+        {
+            throw new InvalidOperationException("Could not find game score");
+        }
+
+        var gameScoreViewModel = _mapper.Map<GameScoreViewModel>(gameScore);
+        
+        return gameScoreViewModel;
     }
 
     public class GameScoreViewModel

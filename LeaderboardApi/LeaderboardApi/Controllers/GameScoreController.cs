@@ -1,4 +1,5 @@
 using AutoMapper;
+using FluentValidation;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,22 @@ public class GameScoreController : ControllerBase
     {
         var query = new GetGameScoreQuery(_dbContext, _mapper);
         var result = query.Handle();
+        
+        return Ok(result);
+    }
+
+    [HttpGet("{id:int}")]
+    public IActionResult GetById(int id)
+    {
+        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        {
+            Id = id
+        };
+        
+        var validator = new GetGameScoreQueryValidator();
+        validator.ValidateAndThrow(query);
+        
+        var result = query.HandleWithId();
         
         return Ok(result);
     }
