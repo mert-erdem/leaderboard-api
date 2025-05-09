@@ -49,6 +49,8 @@ public class GetGameScoreQuery
 
     public class GameScoreViewModel
     {
+        public int Id { get; set; }
+        
         public required string GameName { get; set; }
 
         public required string PlayerName { get; set; }

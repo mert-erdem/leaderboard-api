@@ -6,7 +6,7 @@ namespace LeaderboardApi.Operations.GameScoreOps.Commands;
 
 public class CreateGameScoreCommand
 {
-    public GameScoreInputModel Model { get; set; }
+    public CreateGameScoreInputModel Model { get; set; }
     
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -36,7 +36,7 @@ public class CreateGameScoreCommand
         _dbContext.Save();
     }
 
-    public class GameScoreInputModel
+    public class CreateGameScoreInputModel
     {
         public int GameId { get; set; }
 

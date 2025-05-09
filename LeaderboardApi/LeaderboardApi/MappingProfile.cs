@@ -11,14 +11,16 @@ public class MappingProfile : Profile
     {
         CreateMap<GameScore, GetGameScoreQuery.GameScoreViewModel>()
             .ForMember(
-                x => x.GameName, 
+                dest => dest.GameName, 
                 opt => opt
                     .MapFrom(src => src.Game!.Name))
             .ForMember(
-                x => x.PlayerName,
+                dest => dest.PlayerName,
                 opt => opt
                     .MapFrom(src => src.Player!.Name));
         
-        CreateMap<CreateGameScoreCommand.GameScoreInputModel, GameScore>();
+        CreateMap<CreateGameScoreCommand.CreateGameScoreInputModel, GameScore>();
+
+        CreateMap<UpdateGameScoreCommand.UpdateGameScoreInputModel, GameScore>();
     }
 }

@@ -46,7 +46,7 @@ public class GameScoreController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add([FromBody] CreateGameScoreCommand.GameScoreInputModel model)
+    public IActionResult Add([FromBody] CreateGameScoreCommand.CreateGameScoreInputModel model)
     {
         var command = new CreateGameScoreCommand(_dbContext, _mapper)
         {
@@ -59,5 +59,22 @@ public class GameScoreController : ControllerBase
         command.Handle();
         
         return Ok("Game score added!");
+    }
+
+    [HttpPut("{id:int}")]
+    public IActionResult Update(int id, [FromBody] UpdateGameScoreCommand.UpdateGameScoreInputModel model)
+    {
+        var command = new UpdateGameScoreCommand(_dbContext, _mapper)
+        {
+            Id = id,
+            Model = model
+        };
+        
+        var validator = new UpdateGameScoreCommandValidator();
+        validator.ValidateAndThrow(command);
+        
+        command.Handle();
+        
+        return Ok("Game score updated!");
     }
 }
