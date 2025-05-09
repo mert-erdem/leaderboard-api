@@ -1,6 +1,7 @@
 using AutoMapper;
 using FluentValidation;
 using LeaderboardApi.DbOperations;
+using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -42,5 +43,21 @@ public class GameScoreController : ControllerBase
         var result = query.HandleWithId();
         
         return Ok(result);
+    }
+
+    [HttpPost]
+    public IActionResult Add([FromBody] CreateGameScoreCommand.GameScoreInputModel model)
+    {
+        var command = new CreateGameScoreCommand(_dbContext, _mapper)
+        {
+            Model = model
+        };
+
+        var validator = new CreateGameScoreCommandValidator();
+        validator.ValidateAndThrow(command);
+        
+        command.Handle();
+        
+        return Ok("Game score added!");
     }
 }

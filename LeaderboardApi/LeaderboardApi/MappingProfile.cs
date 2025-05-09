@@ -1,5 +1,6 @@
 using AutoMapper;
 using LeaderboardApi.Entities;
+using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 
 namespace LeaderboardApi;
@@ -17,5 +18,7 @@ public class MappingProfile : Profile
                 x => x.PlayerName,
                 opt => opt
                     .MapFrom(src => src.Player!.Name));
+        
+        CreateMap<CreateGameScoreCommand.GameScoreInputModel, GameScore>();
     }
 }
