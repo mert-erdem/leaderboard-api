@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentValidation;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Operations.GameScoreOps.Commands;
+using LeaderboardApi.Operations.GameScoreOps.Commands.Delete;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 using Microsoft.AspNetCore.Mvc;
 
@@ -76,5 +77,21 @@ public class GameScoreController : ControllerBase
         command.Handle();
         
         return Ok("Game score updated!");
+    }
+
+    [HttpDelete("{id:int}")]
+    public IActionResult Delete(int id)
+    {
+        var command = new DeleteGameScoreCommand(_dbContext)
+        {
+            Id = id
+        };
+        
+        var validator = new DeleteGameScoreCommandValidator();
+        validator.ValidateAndThrow(command);
+        
+        command.Handle();
+        
+        return Ok("Game score deleted!");
     }
 }
