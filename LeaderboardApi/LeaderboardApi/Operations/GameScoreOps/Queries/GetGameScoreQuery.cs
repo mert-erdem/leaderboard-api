@@ -7,6 +7,8 @@ namespace LeaderboardApi.Operations.GameScoreOps.Queries;
 public class GetGameScoreQuery
 {
     public int Id { get; set; }
+
+    public int TopCount { get; set; }
     
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;
@@ -45,6 +47,20 @@ public class GetGameScoreQuery
         var gameScoreViewModel = _mapper.Map<GameScoreViewModel>(gameScore);
         
         return gameScoreViewModel;
+    }
+
+    public List<GameScoreViewModel> HandleTop()
+    {
+        var gameScores = _dbContext.GameScores
+            .Include(x => x.Game)
+            .Include(x => x.Player)
+            .ToList()
+            .OrderByDescending(x => x.Score)
+            .Take(TopCount); // top border safe
+        
+        var gameScoreViewModels = _mapper.Map<List<GameScoreViewModel>>(gameScores);
+        
+        return gameScoreViewModels;
     }
 
     public class GameScoreViewModel

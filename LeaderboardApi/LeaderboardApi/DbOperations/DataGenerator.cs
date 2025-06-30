@@ -29,8 +29,9 @@ public static class DataGenerator
             );
 
         var users = new List<User>();
+        int userCount = 100;
 
-        for (int i = 1; i <= 100; i++)
+        for (int i = 1; i <= userCount; i++)
         {
             users.Add(new User
             {
@@ -44,7 +45,7 @@ public static class DataGenerator
         
         var players = new List<Player>();
 
-        for (int i = 1; i <= 100; i++)
+        for (int i = 1; i <= userCount; i++)
         {
             players.Add(new Player
             {
@@ -60,7 +61,7 @@ public static class DataGenerator
         var random = new Random();
         int id = 1;
 
-        while (usedPairs.Count < 100)
+        while (usedPairs.Count < userCount)
         {
             int gameId = random.Next(1, 4);
             int playerId = random.Next(1, 101);

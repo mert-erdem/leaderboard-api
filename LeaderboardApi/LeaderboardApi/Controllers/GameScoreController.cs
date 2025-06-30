@@ -47,6 +47,22 @@ public class GameScoreController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("top/{count:int}")]
+    public IActionResult GetTop(int count)
+    {
+        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        {
+            TopCount = count
+        };
+        
+        var validator = new GetGameScoreQueryValidator();
+        validator.ValidateAndThrow(query);
+        
+        var result = query.HandleTop();
+        
+        return Ok(result);
+    }
+
     [HttpPost]
     public IActionResult Add([FromBody] CreateGameScoreCommand.CreateGameScoreInputModel model)
     {
