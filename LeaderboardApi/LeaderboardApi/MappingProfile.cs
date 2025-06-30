@@ -1,6 +1,7 @@
 using AutoMapper;
 using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.GameScoreOps.Commands;
+using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 
 namespace LeaderboardApi;

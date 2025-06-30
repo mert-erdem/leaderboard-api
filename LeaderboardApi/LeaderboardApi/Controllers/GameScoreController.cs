@@ -2,6 +2,7 @@ using AutoMapper;
 using FluentValidation;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Operations.GameScoreOps.Commands;
+using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Delete;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
 using Microsoft.AspNetCore.Mvc;

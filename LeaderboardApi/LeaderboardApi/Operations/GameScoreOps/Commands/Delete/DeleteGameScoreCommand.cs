@@ -1,4 +1,3 @@
-using AutoMapper;
 using LeaderboardApi.DbOperations;
 
 namespace LeaderboardApi.Operations.GameScoreOps.Commands.Delete;

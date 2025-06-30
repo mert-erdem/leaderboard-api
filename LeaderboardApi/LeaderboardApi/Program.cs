@@ -1,4 +1,3 @@
-using AutoMapper;
 using LeaderboardApi.DbOperations;
 using Microsoft.EntityFrameworkCore;
 

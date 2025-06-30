@@ -2,11 +2,11 @@ using AutoMapper;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Commands;
+namespace LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 
 public class CreateGameScoreCommand
 {
-    public CreateGameScoreInputModel Model { get; set; }
+    public required CreateGameScoreInputModel Model { get; set; }
     
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;

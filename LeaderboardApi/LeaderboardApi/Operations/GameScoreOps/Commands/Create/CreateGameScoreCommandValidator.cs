@@ -1,4 +1,5 @@
 using FluentValidation;
+using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 
 namespace LeaderboardApi.Operations.GameScoreOps.Commands;
 
