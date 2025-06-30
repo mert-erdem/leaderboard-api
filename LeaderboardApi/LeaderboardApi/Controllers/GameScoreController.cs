@@ -47,11 +47,12 @@ public class GameScoreController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("top/{count:int}")]
-    public IActionResult GetTop(int count)
+    [HttpGet("top")]
+    public IActionResult GetTop([FromQuery] int gameId, [FromQuery] int count)
     {
         var query = new GetGameScoreQuery(_dbContext, _mapper)
         {
+            GameId = gameId,
             TopCount = count
         };
         

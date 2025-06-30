@@ -8,6 +8,8 @@ public class GetGameScoreQuery
 {
     public int Id { get; set; }
 
+    public int GameId { get; set; }
+
     public int TopCount { get; set; }
     
     private readonly ILeaderboardDbContext _dbContext;
@@ -54,6 +56,7 @@ public class GetGameScoreQuery
         var gameScores = _dbContext.GameScores
             .Include(x => x.Game)
             .Include(x => x.Player)
+            .Where(x => x.Game!.Id == GameId)
             .ToList()
             .OrderByDescending(x => x.Score)
             .Take(TopCount); // top border safe
