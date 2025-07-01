@@ -91,4 +91,5 @@ public class GetGameScoreQuery
 
         public DateTime LastEditedTime { get; set; }
     }
+    
 }

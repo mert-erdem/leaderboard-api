@@ -68,6 +68,22 @@ public class GameScoreController : ControllerBase
         return Ok(result);
     }
 
+    [HttpGet("nearest")]
+    public async Task<IActionResult> GetNearest([FromQuery] GetNearestGameScoresQuery.NearestScoresQueryProps queryProps)
+    {
+        var query = new GetNearestGameScoresQuery(_dbContext, _mapper)
+        {
+            QueryProps = queryProps
+        };
+        
+        var validator = new GetNearestGameScoresQueryValidator();
+        await validator.ValidateAndThrowAsync(query.QueryProps);
+
+        var result = await query.Handle();
+        
+        return Ok(result);
+    }
+
     [HttpPost]
     public IActionResult Add([FromBody] CreateGameScoreCommand.CreateGameScoreInputModel model)
     {
