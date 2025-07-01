@@ -8,7 +8,7 @@ public class GetGameScoreQuery
 {
     public int Id { get; set; }
 
-    public int GameId { get; set; }
+    public int? GameId { get; set; }
 
     public int TopCount { get; set; }
     
@@ -23,11 +23,24 @@ public class GetGameScoreQuery
     
     public List<GameScoreViewModel> Handle()
     {
-        var gameScores = _dbContext.GameScores
+        var query = _dbContext.GameScores
             .Include(x => x.Game)
             .Include(x => x.Player)
-            .ToList()
-            .OrderByDescending(x => x.Score);
+            .AsQueryable();
+
+        if (GameId != 0)
+        {
+            query = query.Where(x => x.GameId == GameId);
+
+            if (!query.Any())
+            {
+                throw new InvalidOperationException("No games found with given game ID.");
+            }
+        }
+
+        var gameScores = query
+            .OrderByDescending(x => x.Score)
+            .ToList();
 
         var gameScoreViewModels = _mapper.Map<List<GameScoreViewModel>>(gameScores);
         
@@ -57,9 +70,9 @@ public class GetGameScoreQuery
             .Include(x => x.Game)
             .Include(x => x.Player)
             .Where(x => x.Game!.Id == GameId)
-            .ToList()
             .OrderByDescending(x => x.Score)
-            .Take(TopCount); // top border safe
+            .Take(TopCount) // top border safe
+            .ToList();
         
         var gameScoreViewModels = _mapper.Map<List<GameScoreViewModel>>(gameScores);
         

@@ -23,9 +23,13 @@ public class GameScoreController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll([FromQuery] int gameId)
     {
-        var query = new GetGameScoreQuery(_dbContext, _mapper);
+        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        {
+            GameId = gameId
+        };
+        
         var result = query.Handle();
         
         return Ok(result);

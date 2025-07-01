@@ -10,6 +10,10 @@ public class GetGameScoreQueryValidator : AbstractValidator<GetGameScoreQuery>
             .GreaterThan(0)
             .When(x => x.Id != 0); // when id set
         
+        RuleFor(x => x.GameId)
+            .GreaterThan(0)
+            .When(x => x.GameId.HasValue);
+        
         RuleFor(x => x.TopCount)
             .GreaterThan(0)
             .LessThanOrEqualTo(1000)
