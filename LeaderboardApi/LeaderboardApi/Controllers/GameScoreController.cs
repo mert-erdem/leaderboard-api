@@ -5,6 +5,8 @@ using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Delete;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetNearestGameScores;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeaderboardApi.Controllers;
@@ -76,7 +78,7 @@ public class GameScoreController : ControllerBase
             QueryProps = queryProps
         };
         
-        var validator = new GetNearestGameScoresQueryValidator();
+        var validator = new NearestScoresQueryPropsValidator();
         await validator.ValidateAndThrowAsync(query.QueryProps);
 
         var result = await query.Handle();

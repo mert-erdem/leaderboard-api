@@ -2,7 +2,7 @@ using AutoMapper;
 using LeaderboardApi.DbOperations;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Queries;
+namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
 
 public class GetGameScoreQuery
 {

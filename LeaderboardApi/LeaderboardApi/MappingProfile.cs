@@ -3,6 +3,7 @@ using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
 
 namespace LeaderboardApi;
 

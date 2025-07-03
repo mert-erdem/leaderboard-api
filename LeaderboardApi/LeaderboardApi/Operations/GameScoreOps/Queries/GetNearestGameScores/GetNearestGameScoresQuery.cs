@@ -1,9 +1,10 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
 using Microsoft.EntityFrameworkCore;
 using InvalidOperationException = System.InvalidOperationException;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Queries;
+namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetNearestGameScores;
 
 public class GetNearestGameScoresQuery
 {

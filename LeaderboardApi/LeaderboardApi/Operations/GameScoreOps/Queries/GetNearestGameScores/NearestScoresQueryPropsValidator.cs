@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Queries;
+namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetNearestGameScores;
 
-public class GetNearestGameScoresQueryValidator : AbstractValidator<GetNearestGameScoresQuery.NearestScoresQueryProps>
+public class NearestScoresQueryPropsValidator : AbstractValidator<GetNearestGameScoresQuery.NearestScoresQueryProps>
 {
-    public GetNearestGameScoresQueryValidator()
+    public NearestScoresQueryPropsValidator()
     {
         RuleFor(x => x.PlayerId).GreaterThan(0);
         RuleFor(x => x.GameId).GreaterThan(0);
