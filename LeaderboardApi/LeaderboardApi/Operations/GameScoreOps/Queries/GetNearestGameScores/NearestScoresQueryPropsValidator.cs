@@ -6,9 +6,16 @@ public class NearestScoresQueryPropsValidator : AbstractValidator<GetNearestGame
 {
     public NearestScoresQueryPropsValidator()
     {
-        RuleFor(x => x.PlayerId).GreaterThan(0);
-        RuleFor(x => x.GameId).GreaterThan(0);
-        RuleFor(x => x.CountBelow).GreaterThanOrEqualTo(0);
-        RuleFor(x => x.CountAbove).GreaterThanOrEqualTo(0);
+        RuleFor(x => x.PlayerId)
+            .GreaterThan(0);
+        
+        RuleFor(x => x.GameId)
+            .GreaterThan(0);
+        
+        RuleFor(x => x.CountBelow)
+            .GreaterThanOrEqualTo(0);
+        
+        RuleFor(x => x.CountAbove)
+            .GreaterThanOrEqualTo(0);
     }
 }

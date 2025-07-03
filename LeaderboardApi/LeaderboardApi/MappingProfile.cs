@@ -11,7 +11,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<GameScore, GetGameScoreQuery.GameScoreViewModel>()
+        CreateMap<GameScore, GetGameScoresQuery.GameScoreViewModel>()
             .ForMember(
                 dest => dest.GameName, 
                 opt => opt

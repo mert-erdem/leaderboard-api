@@ -19,7 +19,7 @@ public class GetNearestGameScoresQuery
         _mapper = mapper;
     }
 
-    public async Task<List<GetGameScoreQuery.GameScoreViewModel>> Handle()
+    public async Task<List<GetGameScoresQuery.GameScoreViewModel>> Handle()
     {
         var playerGameScore = await _dbContext.GameScores
             .Include(x => x.Player)
@@ -49,10 +49,10 @@ public class GetNearestGameScoresQuery
             .Take(QueryProps.CountBelow)
             .ToListAsync();
         
-        var leaderboardWindow = new List<GetGameScoreQuery.GameScoreViewModel>();
-        var aboveScoresViewModel = _mapper.Map<List<GetGameScoreQuery.GameScoreViewModel>>(aboveScores);
-        var playerScoreViewModel = _mapper.Map<GetGameScoreQuery.GameScoreViewModel>(playerGameScore);
-        var belowScoresViewModel = _mapper.Map<List<GetGameScoreQuery.GameScoreViewModel>>(belowScores);
+        var leaderboardWindow = new List<GetGameScoresQuery.GameScoreViewModel>();
+        var aboveScoresViewModel = _mapper.Map<List<GetGameScoresQuery.GameScoreViewModel>>(aboveScores);
+        var playerScoreViewModel = _mapper.Map<GetGameScoresQuery.GameScoreViewModel>(playerGameScore);
+        var belowScoresViewModel = _mapper.Map<List<GetGameScoresQuery.GameScoreViewModel>>(belowScores);
 
         // Sort higher scores descending (higher scores above player)
         leaderboardWindow.AddRange(aboveScoresViewModel.OrderByDescending(s => s.Score));

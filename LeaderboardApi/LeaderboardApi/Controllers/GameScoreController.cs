@@ -5,8 +5,10 @@ using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Delete;
 using LeaderboardApi.Operations.GameScoreOps.Queries;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetById;
 using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
 using LeaderboardApi.Operations.GameScoreOps.Queries.GetNearestGameScores;
+using LeaderboardApi.Operations.GameScoreOps.Queries.GetTop;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeaderboardApi.Controllers;
@@ -27,10 +29,13 @@ public class GameScoreController : ControllerBase
     [HttpGet]
     public IActionResult GetAll([FromQuery] int gameId)
     {
-        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        var query = new GetGameScoresQuery(_dbContext, _mapper)
         {
             GameId = gameId
         };
+
+        var validator = new GetGameScoresQueryValidator();
+        validator.ValidateAndThrow(query);
         
         var result = query.Handle();
         
@@ -40,12 +45,12 @@ public class GameScoreController : ControllerBase
     [HttpGet("{id:int}")]
     public IActionResult GetById(int id)
     {
-        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        var query = new GetGameScoreById(_dbContext, _mapper)
         {
             Id = id
         };
         
-        var validator = new GetGameScoreQueryValidator();
+        var validator = new GetGameScoreByIdValidator();
         validator.ValidateAndThrow(query);
         
         var result = query.HandleWithId();
@@ -56,16 +61,16 @@ public class GameScoreController : ControllerBase
     [HttpGet("top")]
     public IActionResult GetTop([FromQuery] int gameId, [FromQuery] int count)
     {
-        var query = new GetGameScoreQuery(_dbContext, _mapper)
+        var query = new GetGameScoresTopQuery(_dbContext, _mapper)
         {
             GameId = gameId,
             TopCount = count
         };
         
-        var validator = new GetGameScoreQueryValidator();
+        var validator = new GetGameScoresTopQueryValidator();
         validator.ValidateAndThrow(query);
         
-        var result = query.HandleTop();
+        var result = query.Handle();
         
         return Ok(result);
     }
