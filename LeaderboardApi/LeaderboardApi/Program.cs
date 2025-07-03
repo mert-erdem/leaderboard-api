@@ -1,4 +1,6 @@
 using LeaderboardApi.DbOperations;
+using LeaderboardApi.Middlewares;
+using LeaderboardApi.Services.Loggers;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +12,7 @@ builder.Services.AddOpenApi();
 builder.Services.AddDbContext<LeaderboardDbContext>(x => x.UseInMemoryDatabase("LeaderboardDB"));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILeaderboardDbContext>(provider => provider.GetService<LeaderboardDbContext>()!);
+builder.Services.AddSingleton<ILoggerService, ConsoleLoggerService>();
 
 var app = builder.Build();
 
@@ -26,6 +29,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<CustomExceptionMiddleware>();
 app.MapControllers();
 
 app.Run();

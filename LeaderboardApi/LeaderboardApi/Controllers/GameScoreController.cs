@@ -53,7 +53,7 @@ public class GameScoreController : ControllerBase
         var validator = new GetGameScoreByIdValidator();
         validator.ValidateAndThrow(query);
         
-        var result = query.HandleWithId();
+        var result = query.Handle();
         
         return Ok(result);
     }

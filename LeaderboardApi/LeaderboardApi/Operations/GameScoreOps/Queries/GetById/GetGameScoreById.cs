@@ -18,7 +18,7 @@ public class GetGameScoreById
         _mapper = mapper;
     }
     
-    public GetGameScoresQuery.GameScoreViewModel HandleWithId()
+    public GetGameScoresQuery.GameScoreViewModel Handle()
     {
         var gameScore = _dbContext.GameScores
             .Include(x => x.Game)
