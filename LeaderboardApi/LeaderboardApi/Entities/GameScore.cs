@@ -20,6 +20,6 @@ public class GameScore
     public Player? Player { get; set; }
 
     public double Score { get; set; }
-
+    
     public DateTime LastEditedTime { get; set; }
 }

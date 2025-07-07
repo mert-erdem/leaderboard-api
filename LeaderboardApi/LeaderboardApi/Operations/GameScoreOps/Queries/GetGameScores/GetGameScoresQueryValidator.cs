@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
+namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScores;
 
 public class GetGameScoresQueryValidator : AbstractValidator<GetGameScoresQuery>
 {

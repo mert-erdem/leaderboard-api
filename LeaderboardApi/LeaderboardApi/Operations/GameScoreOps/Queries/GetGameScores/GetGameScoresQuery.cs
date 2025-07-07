@@ -1,8 +1,9 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
+using LeaderboardApi.Operations.GameScoreOps.Queries.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
+namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScores;
 
 public class GetGameScoresQuery
 {
@@ -35,18 +36,4 @@ public class GetGameScoresQuery
         
         return gameScoreViewModels;
     }
-
-    public class GameScoreViewModel
-    {
-        public int Id { get; set; }
-        
-        public required string GameName { get; set; }
-
-        public required string PlayerName { get; set; }
-
-        public double Score { get; set; }
-
-        public DateTime LastEditedTime { get; set; }
-    }
-    
 }

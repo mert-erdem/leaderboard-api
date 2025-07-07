@@ -1,6 +1,6 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
-using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
+using LeaderboardApi.Operations.GameScoreOps.Queries.ViewModels;
 using Microsoft.EntityFrameworkCore;
 
 namespace LeaderboardApi.Operations.GameScoreOps.Queries.GetTop;
@@ -20,7 +20,7 @@ public class GetGameScoresTopQuery
         _mapper = mapper;
     }
     
-    public List<GetGameScoresQuery.GameScoreViewModel> Handle()
+    public List<GameScoreViewModel> Handle()
     {
         var gameScores = _dbContext.GameScores
             .Include(x => x.Game)
@@ -35,7 +35,7 @@ public class GetGameScoresTopQuery
             throw new InvalidOperationException("No games found with given game ID!");
         }
         
-        var gameScoreViewModels = _mapper.Map<List<GetGameScoresQuery.GameScoreViewModel>>(gameScores);
+        var gameScoreViewModels = _mapper.Map<List<GameScoreViewModel>>(gameScores);
         
         return gameScoreViewModels;
     }

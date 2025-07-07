@@ -1,6 +1,6 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
-using LeaderboardApi.Operations.GameScoreOps.Queries.GetGameScore;
+using LeaderboardApi.Operations.GameScoreOps.Queries.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using InvalidOperationException = System.InvalidOperationException;
 
@@ -19,51 +19,40 @@ public class GetNearestGameScoresQuery
         _mapper = mapper;
     }
 
-    public async Task<List<GetGameScoresQuery.GameScoreViewModel>> Handle()
+    public async Task<List<GameScoreWithRankViewModel>> Handle()
     {
-        var playerGameScore = await _dbContext.GameScores
+        // Retrieve game scores descending
+        var gameScores = await _dbContext.GameScores
             .Include(x => x.Player)
-            .Where(x => x.Game!.Id == QueryProps.GameId && x.Player!.Id == QueryProps.PlayerId)
-            .SingleOrDefaultAsync();
+            .Include(x => x.Game)
+            .Where(x => x.Game!.Id == QueryProps.GameId)
+            .OrderByDescending(x => x.Score)
+            .ToListAsync();
 
-        if (playerGameScore == null)
+        // Find the index of the player's score
+        var playerIndex = gameScores.FindIndex(x => x.Player!.Id == QueryProps.PlayerId);
+        if (playerIndex == -1)
         {
             throw new InvalidOperationException("No player score found for given game!");
         }
-        
-        // Higher scores
-        var aboveScores = await _dbContext.GameScores
-            .Include(x => x.Player)
-            .Include(x => x.Game)
-            .Where(x => x.Game!.Id == QueryProps.GameId && x.Score > playerGameScore.Score)
-            .OrderBy(s => s.Score) // closest higher first
-            .Take(QueryProps.CountAbove)
-            .ToListAsync();
 
-        // Lower scores
-        var belowScores = await _dbContext.GameScores
-            .Include(x => x.Player)
-            .Include(x => x.Game)
-            .Where(x => x.Game!.Id == QueryProps.GameId && x.Score < playerGameScore.Score)
-            .OrderByDescending(s => s.Score) // closest lower first
-            .Take(QueryProps.CountBelow)
-            .ToListAsync();
-        
-        var leaderboardWindow = new List<GetGameScoresQuery.GameScoreViewModel>();
-        var aboveScoresViewModel = _mapper.Map<List<GetGameScoresQuery.GameScoreViewModel>>(aboveScores);
-        var playerScoreViewModel = _mapper.Map<GetGameScoresQuery.GameScoreViewModel>(playerGameScore);
-        var belowScoresViewModel = _mapper.Map<List<GetGameScoresQuery.GameScoreViewModel>>(belowScores);
+        // Calculate the range to include scores
+        int aboveIndex = Math.Max(0, playerIndex - QueryProps.CountAbove);
+        int belowIndex = Math.Min(gameScores.Count - 1, playerIndex + QueryProps.CountBelow);
 
-        // Sort higher scores descending (higher scores above player)
-        leaderboardWindow.AddRange(aboveScoresViewModel.OrderByDescending(s => s.Score));
+        // Extract the relevant range of scores and map them
+        var selectedGameScores = gameScores
+            .Skip(aboveIndex)
+            .Take(belowIndex - aboveIndex + 1)
+            .Select((gameScore, index) =>
+            {
+                var viewModel = _mapper.Map<GameScoreWithRankViewModel>(gameScore);
+                viewModel.Rank = aboveIndex + index + 1; // Rank is 1-based
+                return viewModel;
+            })
+            .ToList();
 
-        // Add the player's own score
-        leaderboardWindow.Add(playerScoreViewModel);
-
-        // Add lower scores descending
-        leaderboardWindow.AddRange(belowScoresViewModel.OrderByDescending(s => s.Score));
-
-        return leaderboardWindow;
+        return selectedGameScores;
     }
     
     public record NearestScoresQueryProps(int PlayerId, int GameId, int CountAbove, int CountBelow);
