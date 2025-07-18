@@ -3,12 +3,19 @@ using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Queries.ViewModels;
+using LeaderboardApi.Operations.UserOps.Commands;
 
-namespace LeaderboardApi;
+namespace LeaderboardApi.Mapping;
 
 public class MappingProfile : Profile
 {
     public MappingProfile()
+    {
+        CreateGameScoreMaps();
+        CreateUserMaps();
+    }
+
+    private void CreateGameScoreMaps()
     {
         CreateMap<GameScore, GameScoreViewModel>()
             .ForMember(
@@ -33,5 +40,10 @@ public class MappingProfile : Profile
         CreateMap<CreateGameScoreCommand.CreateGameScoreInputModel, GameScore>();
 
         CreateMap<UpdateGameScoreCommand.UpdateGameScoreInputModel, GameScore>();
+    }
+
+    private void CreateUserMaps()
+    {
+        CreateMap<CreateUserCommand.CreateUserInputModel, User>();
     }
 }

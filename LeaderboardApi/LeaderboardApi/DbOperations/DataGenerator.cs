@@ -35,7 +35,6 @@ public static class DataGenerator
         {
             users.Add(new User
             {
-                Username = $"user{i}",
                 Email = $"user{i}@example.com",
                 PasswordHash = $"hashed_password_{i}"
             });

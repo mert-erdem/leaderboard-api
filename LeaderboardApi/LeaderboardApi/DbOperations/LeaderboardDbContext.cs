@@ -21,4 +21,9 @@ public class LeaderboardDbContext : DbContext, ILeaderboardDbContext
     {
         return base.SaveChanges();
     }
+    
+    public Task<int> SaveAsync()
+    {
+        return base.SaveChangesAsync();
+    }
 }
