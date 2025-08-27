@@ -1,6 +1,7 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
+using LeaderboardApi.TokenOperations;
 using Microsoft.AspNetCore.Identity;
 
 namespace LeaderboardApi.Operations.UserOps.Commands;
@@ -11,16 +12,18 @@ public class CreateUserCommand
     
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;
+    private readonly TokenHandler _tokenHandler;
     private readonly PasswordHasher<User> _passwordHasher;
     
-    public CreateUserCommand(ILeaderboardDbContext dbContext, IMapper mapper)
+    public CreateUserCommand(ILeaderboardDbContext dbContext, IMapper mapper, TokenHandler tokenHandler)
     {
         _dbContext = dbContext;
         _mapper = mapper;
+        _tokenHandler = tokenHandler;
         _passwordHasher = new PasswordHasher<User>();
     }
     
-    public async Task Handle()
+    public async Task<TokenDto> Handle()
     {
         var user = _mapper.Map<User>(Model);
         
@@ -28,9 +31,15 @@ public class CreateUserCommand
         user.PasswordHash = _passwordHasher.HashPassword(user, Model.Password);
         
         // TODO: Create token for the user
+        var token = _tokenHandler.GenerateToken(user);
+        user.RefreshToken = token.RefreshToken;
         
         _dbContext.Users.Add(user);
         await _dbContext.SaveAsync();
+        
+        var tokenDto = new TokenDto(token.AccessToken, token.RefreshToken);
+        
+        return tokenDto;
     }
     
     public class CreateUserInputModel

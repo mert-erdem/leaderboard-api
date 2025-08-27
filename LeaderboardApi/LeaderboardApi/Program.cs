@@ -1,7 +1,11 @@
+using System.Text;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Middlewares;
 using LeaderboardApi.Services.Loggers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using TokenHandler = LeaderboardApi.TokenOperations.TokenHandler;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +13,25 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
+{
+    opt.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateAudience = false,
+        ValidateIssuer = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Token:Issuer"],
+        ValidAudience = builder.Configuration["Token:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Token:SecurityKey"]!)),
+        ClockSkew = TimeSpan.Zero
+    };
+});
 builder.Services.AddDbContext<LeaderboardDbContext>(x => x.UseInMemoryDatabase("LeaderboardDB"));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILeaderboardDbContext>(provider => provider.GetService<LeaderboardDbContext>()!);
 builder.Services.AddSingleton<ILoggerService, ConsoleLoggerService>();
+builder.Services.AddSingleton<TokenHandler>();
 
 var app = builder.Build();
 
