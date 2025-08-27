@@ -1,7 +1,7 @@
 using FluentValidation;
 using LeaderboardApi.DbOperations;
 
-namespace LeaderboardApi.Operations.UserOps.Commands;
+namespace LeaderboardApi.Operations.UserOps.Commands.Create;
 
 public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
 {

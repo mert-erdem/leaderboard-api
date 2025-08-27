@@ -4,6 +4,7 @@ using LeaderboardApi.Operations.GameScoreOps.Commands;
 using LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 using LeaderboardApi.Operations.GameScoreOps.Queries.ViewModels;
 using LeaderboardApi.Operations.UserOps.Commands;
+using LeaderboardApi.Operations.UserOps.Commands.Create;
 
 namespace LeaderboardApi.Mapping;
 

@@ -2,6 +2,8 @@ using AutoMapper;
 using FluentValidation;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Operations.UserOps.Commands;
+using LeaderboardApi.Operations.UserOps.Commands.Create;
+using LeaderboardApi.Operations.UserOps.Commands.Login;
 using LeaderboardApi.TokenOperations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +35,22 @@ public class UserController : Controller
         var validator = new CreateUserCommandValidator(_dbContext);
         await validator.ValidateAndThrowAsync(command);
         
+        var result = await command.Handle();
+        
+        return Ok(result);
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginUserCommand.UserLoginModel model)
+    {
+        var command = new LoginUserCommand(_dbContext, _tokenHandler)
+        {
+            Model = model
+        };
+
+        var validator = new LoginUserCommandValidator(_dbContext);
+        await validator.ValidateAndThrowAsync(command);
+
         var result = await command.Handle();
         
         return Ok(result);
