@@ -4,6 +4,7 @@ using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.UserOps.Commands.Create;
 using LeaderboardApi.Operations.UserOps.Commands.Login;
+using LeaderboardApi.Operations.UserOps.Commands.Logout;
 using LeaderboardApi.TokenOperations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -57,5 +58,21 @@ public class UserController : Controller
         var result = await command.Handle();
         
         return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] LogoutUserCommand.LogoutUserViewModel model)
+    {
+        var command = new LogoutUserCommand(_dbContext)
+        {
+            Model = model
+        };
+        
+        var validator = new LogoutUserCommandValidator();
+        await validator.ValidateAndThrowAsync(command);
+
+        await command.Handle();
+        
+        return Ok("User logged out!");
     }
 }
