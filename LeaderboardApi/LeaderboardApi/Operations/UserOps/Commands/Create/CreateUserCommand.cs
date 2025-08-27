@@ -15,12 +15,13 @@ public class CreateUserCommand
     private readonly TokenHandler _tokenHandler;
     private readonly PasswordHasher<User> _passwordHasher;
     
-    public CreateUserCommand(ILeaderboardDbContext dbContext, IMapper mapper, TokenHandler tokenHandler)
+    public CreateUserCommand(ILeaderboardDbContext dbContext, IMapper mapper, TokenHandler tokenHandler, 
+        PasswordHasher<User> passwordHasher)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _tokenHandler = tokenHandler;
-        _passwordHasher = new PasswordHasher<User>();
+        _passwordHasher = passwordHasher;
     }
     
     public async Task<TokenDto> Handle()

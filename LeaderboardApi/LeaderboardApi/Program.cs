@@ -1,8 +1,10 @@
 using System.Text;
 using LeaderboardApi.DbOperations;
+using LeaderboardApi.Entities;
 using LeaderboardApi.Middlewares;
 using LeaderboardApi.Services.Loggers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using TokenHandler = LeaderboardApi.TokenOperations.TokenHandler;
@@ -32,6 +34,7 @@ builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILeaderboardDbContext>(provider => provider.GetService<LeaderboardDbContext>()!);
 builder.Services.AddSingleton<ILoggerService, ConsoleLoggerService>();
 builder.Services.AddSingleton<TokenHandler>();
+builder.Services.AddSingleton<PasswordHasher<User>>();
 
 var app = builder.Build();
 

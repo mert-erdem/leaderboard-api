@@ -13,11 +13,11 @@ public class LoginUserCommand
     private readonly TokenHandler _tokenHandler;
     private readonly PasswordHasher<User> _passwordHasher;
 
-    public LoginUserCommand(ILeaderboardDbContext dbContext, TokenHandler tokenHandler)
+    public LoginUserCommand(ILeaderboardDbContext dbContext, TokenHandler tokenHandler, PasswordHasher<User> passwordHasher)
     {
         _dbContext = dbContext;
         _tokenHandler = tokenHandler;
-        _passwordHasher = new PasswordHasher<User>();
+        _passwordHasher = passwordHasher;
     }
     
     public async Task<TokenDto> Handle()

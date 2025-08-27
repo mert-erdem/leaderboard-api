@@ -12,7 +12,7 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
             .EmailAddress()
             .Must(email => dbContext.Users.Any(x => x.Email == email))
             .WithMessage("User or password is incorrect!");
-        
+
         RuleFor(x => x.Model.Password)
             .NotEmpty()
             .MinimumLength(8).WithMessage("Password must be at least 8 characters long!")

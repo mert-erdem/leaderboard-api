@@ -1,10 +1,11 @@
 using AutoMapper;
 using FluentValidation;
 using LeaderboardApi.DbOperations;
-using LeaderboardApi.Operations.UserOps.Commands;
+using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.UserOps.Commands.Create;
 using LeaderboardApi.Operations.UserOps.Commands.Login;
 using LeaderboardApi.TokenOperations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LeaderboardApi.Controllers;
@@ -16,18 +17,20 @@ public class UserController : Controller
     private readonly ILeaderboardDbContext _dbContext;
     private readonly IMapper _mapper;
     private readonly TokenHandler _tokenHandler;
+    private readonly PasswordHasher<User> _passwordHasher;
 
-    public UserController(ILeaderboardDbContext dbContext, IMapper mapper, TokenHandler tokenHandler)
+    public UserController(ILeaderboardDbContext dbContext, IMapper mapper, TokenHandler tokenHandler, PasswordHasher<User> passwordHasher)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _tokenHandler = tokenHandler;
+        _passwordHasher = passwordHasher;
     }
     
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] CreateUserCommand.CreateUserInputModel model)
     {
-        var command = new CreateUserCommand(_dbContext, _mapper, _tokenHandler)
+        var command = new CreateUserCommand(_dbContext, _mapper, _tokenHandler, _passwordHasher)
         {
             Model = model
         };
@@ -43,7 +46,7 @@ public class UserController : Controller
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUserCommand.UserLoginModel model)
     {
-        var command = new LoginUserCommand(_dbContext, _tokenHandler)
+        var command = new LoginUserCommand(_dbContext, _tokenHandler, _passwordHasher)
         {
             Model = model
         };
