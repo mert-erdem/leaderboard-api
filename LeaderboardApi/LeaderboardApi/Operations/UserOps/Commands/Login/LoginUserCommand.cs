@@ -39,7 +39,6 @@ public class LoginUserCommand
 
         var token = _tokenHandler.GenerateToken(user);
         user.RefreshToken = token.RefreshToken;
-        user.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
         
         await _dbContext.SaveAsync();
         

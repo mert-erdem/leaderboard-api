@@ -34,7 +34,6 @@ public class CreateUserCommand
         // TODO: Create token for the user
         var token = _tokenHandler.GenerateToken(user);
         user.RefreshToken = token.RefreshToken;
-        user.RefreshTokenExpireTime = DateTime.UtcNow.AddDays(7);
         
         _dbContext.Users.Add(user);
         await _dbContext.SaveAsync();

@@ -9,18 +9,29 @@ namespace LeaderboardApi.TokenRelated;
 
 public class TokenHandler
 {
+    private readonly double _accessTokenExpireMinutes;
+    private readonly double _refreshTokenExpireDays;
+
     private readonly IConfiguration _config;
 
     public TokenHandler(IConfiguration config)
     {
         _config = config;
+        _accessTokenExpireMinutes = _config.GetValue<double>("JwtSettings:AccessTokenMinutes");
+        _refreshTokenExpireDays = _config.GetValue<double>("JwtSettings:RefreshTokenDays");
     }
     
+    /// <summary>
+    /// Generates JWT Token for access and refresh purposes.
+    /// Expire times of tokens are set by this method.
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
     public Token GenerateToken(User user)
     {
         var token = new Token();
 
-        var claims = new List<Claim>()
+        var claims = new List<Claim>
         {
             new (ClaimTypes.NameIdentifier, user.Id.ToString()),
             new (ClaimTypes.Name, user.Email)
@@ -28,13 +39,13 @@ public class TokenHandler
         
         var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Token:SecurityKey"]!));
         var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-        token.ExpireDate = DateTime.UtcNow.AddMinutes(15);
+        token.AccessTokenExpireDate = DateTime.UtcNow.AddMinutes(_accessTokenExpireMinutes);
         
         var jwtSecurityToken = new JwtSecurityToken(
             issuer: _config["Token:Issuer"], 
             audience: _config["Token:Audience"], 
             claims: claims,
-            expires: token.ExpireDate, 
+            expires: token.AccessTokenExpireDate, 
             notBefore: DateTime.UtcNow, 
             signingCredentials: signingCredentials
         );
@@ -43,6 +54,7 @@ public class TokenHandler
         var tokenHandler = new JwtSecurityTokenHandler();
         token.AccessToken = tokenHandler.WriteToken(jwtSecurityToken);
         token.RefreshToken = CreateRefreshToken();
+        token.RefreshTokenExpireDate = DateTime.UtcNow.AddDays(_refreshTokenExpireDays);
 
         return token;
     }
