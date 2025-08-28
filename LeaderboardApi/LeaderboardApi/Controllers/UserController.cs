@@ -6,6 +6,7 @@ using LeaderboardApi.Operations.UserOps.Commands.Create;
 using LeaderboardApi.Operations.UserOps.Commands.Login;
 using LeaderboardApi.Operations.UserOps.Commands.Logout;
 using LeaderboardApi.TokenOperations;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,6 +30,7 @@ public class UserController : Controller
     }
     
     [HttpPost("register")]
+    [AllowAnonymous]
     public async Task<IActionResult> Register([FromBody] CreateUserCommand.CreateUserInputModel model)
     {
         var command = new CreateUserCommand(_dbContext, _mapper, _tokenHandler, _passwordHasher)
@@ -45,6 +47,7 @@ public class UserController : Controller
     }
 
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginUserCommand.UserLoginModel model)
     {
         var command = new LoginUserCommand(_dbContext, _tokenHandler, _passwordHasher)

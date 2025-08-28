@@ -29,6 +29,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ClockSkew = TimeSpan.Zero
     };
 });
+builder.Services.AddAuthorization();
 builder.Services.AddDbContext<LeaderboardDbContext>(x => x.UseInMemoryDatabase("LeaderboardDB"));
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddScoped<ILeaderboardDbContext>(provider => provider.GetService<LeaderboardDbContext>()!);
@@ -51,7 +52,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseMiddleware<CustomExceptionMiddleware>();
-app.MapControllers();
+app.MapControllers().RequireAuthorization();
 
 app.Run();
