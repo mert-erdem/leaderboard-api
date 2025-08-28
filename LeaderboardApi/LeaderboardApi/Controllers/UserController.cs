@@ -65,11 +65,11 @@ public class UserController : Controller
     }
 
     [HttpPost("logout")]
-    public async Task<IActionResult> Logout([FromBody] LogoutUserCommand.LogoutUserViewModel model)
+    public async Task<IActionResult> Logout([FromBody] string refreshToken)
     {
         var command = new LogoutUserCommand(_dbContext)
         {
-            Model = model
+            RefreshToken = refreshToken
         };
         
         var validator = new LogoutUserCommandValidator();

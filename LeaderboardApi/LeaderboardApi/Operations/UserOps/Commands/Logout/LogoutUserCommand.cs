@@ -5,7 +5,7 @@ namespace LeaderboardApi.Operations.UserOps.Commands.Logout;
 
 public class LogoutUserCommand
 {
-    public LogoutUserViewModel Model { get; set; }
+    public string RefreshToken { get; set; }
     
     private readonly ILeaderboardDbContext _dbContext;
 
@@ -16,7 +16,7 @@ public class LogoutUserCommand
     
     public async Task Handle()
     {
-        var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.RefreshToken == Model.RefreshToken);
+        var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.RefreshToken == RefreshToken);
 
         if (user is null)
         {
@@ -27,10 +27,5 @@ public class LogoutUserCommand
         user.RefreshTokenExpireTime = null;
 
         await _dbContext.SaveAsync();
-    }
-
-    public class LogoutUserViewModel
-    {
-        public required string RefreshToken { get; set; }
     }
 }
