@@ -5,7 +5,7 @@ using System.Text;
 using LeaderboardApi.Entities;
 using Microsoft.IdentityModel.Tokens;
 
-namespace LeaderboardApi.TokenOperations;
+namespace LeaderboardApi.TokenRelated;
 
 public class TokenHandler
 {

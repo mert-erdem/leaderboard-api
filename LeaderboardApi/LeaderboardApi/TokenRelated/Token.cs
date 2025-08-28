@@ -1,4 +1,4 @@
-namespace LeaderboardApi.TokenOperations;
+namespace LeaderboardApi.TokenRelated;
 
 public class Token
 {

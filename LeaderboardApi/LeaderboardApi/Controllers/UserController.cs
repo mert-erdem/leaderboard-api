@@ -5,7 +5,8 @@ using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.UserOps.Commands.Create;
 using LeaderboardApi.Operations.UserOps.Commands.Login;
 using LeaderboardApi.Operations.UserOps.Commands.Logout;
-using LeaderboardApi.TokenOperations;
+using LeaderboardApi.Operations.UserOps.Commands.Refresh;
+using LeaderboardApi.TokenRelated;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -77,5 +78,21 @@ public class UserController : Controller
         await command.Handle();
         
         return Ok("User logged out!");
+    }
+
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] string refreshToken)
+    {
+        var command = new RefreshSessionCommand(_dbContext, _tokenHandler)
+        {
+            RefreshToken = refreshToken
+        };
+        
+        var validator = new RefreshSessionCommandValidator();
+        await validator.ValidateAndThrowAsync(command);
+        
+        var result = await command.Handle();
+        
+        return Ok(result);
     }
 }

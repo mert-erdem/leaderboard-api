@@ -1,6 +1,6 @@
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
-using LeaderboardApi.TokenOperations;
+using LeaderboardApi.TokenRelated;
 using Microsoft.AspNetCore.Identity;
 
 namespace LeaderboardApi.Operations.UserOps.Commands.Login;
