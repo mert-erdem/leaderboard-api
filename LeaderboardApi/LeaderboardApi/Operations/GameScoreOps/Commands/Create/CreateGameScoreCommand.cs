@@ -1,6 +1,7 @@
 using AutoMapper;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaderboardApi.Operations.GameScoreOps.Commands.Create;
 
@@ -17,10 +18,10 @@ public class CreateGameScoreCommand
         _mapper = mapper;
     }
 
-    public void Handle()
+    public async Task Handle()
     {
-        var gameScore = _dbContext.GameScores
-            .SingleOrDefault(x => 
+        var gameScore = await _dbContext.GameScores
+            .SingleOrDefaultAsync(x => 
             x.GameId == Model.GameId && 
             x.PlayerId == Model.PlayerId);
 
@@ -33,7 +34,8 @@ public class CreateGameScoreCommand
         gameScoreNew.LastEditedTime = DateTime.Now;
 
         _dbContext.GameScores.Add(gameScoreNew);
-        _dbContext.Save();
+        
+        await _dbContext.SaveAsync();
     }
 
     public class CreateGameScoreInputModel

@@ -20,15 +20,15 @@ public class GetGameScoresTopQuery
         _mapper = mapper;
     }
     
-    public List<GameScoreViewModel> Handle()
+    public async Task<List<GameScoreViewModel>> Handle()
     {
-        var gameScores = _dbContext.GameScores
+        var gameScores = await _dbContext.GameScores
             .Include(x => x.Game)
             .Include(x => x.Player)
             .Where(x => x.Game!.Id == GameId)
             .OrderByDescending(x => x.Score)
             .Take(TopCount) // top border safe
-            .ToList();
+            .ToListAsync();
 
         if (gameScores.Count == 0)
         {

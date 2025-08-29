@@ -18,14 +18,14 @@ public class GetGameScoresQuery
         _mapper = mapper;
     }
     
-    public List<GameScoreViewModel> Handle()
+    public async Task<List<GameScoreViewModel>> Handle()
     {
-        var gameScores = _dbContext.GameScores
+        var gameScores = await _dbContext.GameScores
             .Include(x => x.Game)
             .Include(x => x.Player)
             .Where(x => x.GameId == GameId)
             .OrderByDescending(x => x.Score)
-            .ToList();
+            .ToListAsync();
 
         if (gameScores.Count == 0)
         {

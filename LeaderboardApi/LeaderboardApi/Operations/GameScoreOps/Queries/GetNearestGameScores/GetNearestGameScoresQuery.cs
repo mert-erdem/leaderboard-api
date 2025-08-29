@@ -31,6 +31,7 @@ public class GetNearestGameScoresQuery
 
         // Find the index of the player's score
         var playerIndex = gameScores.FindIndex(x => x.Player!.Id == QueryProps.PlayerId);
+        
         if (playerIndex == -1)
         {
             throw new InvalidOperationException("No player score found for given game!");

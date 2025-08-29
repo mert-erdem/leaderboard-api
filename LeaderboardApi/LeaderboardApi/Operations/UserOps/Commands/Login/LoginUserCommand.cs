@@ -2,6 +2,7 @@ using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
 using LeaderboardApi.TokenRelated;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaderboardApi.Operations.UserOps.Commands.Login;
 
@@ -22,7 +23,7 @@ public class LoginUserCommand
     
     public async Task<TokenDto> Handle()
     {
-        var user = _dbContext.Users.SingleOrDefault(x => x.Email == Model.Email);
+        var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Email == Model.Email);
 
         // user's mail has checked by validator already
         var result = _passwordHasher.VerifyHashedPassword(user!, user!.PasswordHash, Model.Password);

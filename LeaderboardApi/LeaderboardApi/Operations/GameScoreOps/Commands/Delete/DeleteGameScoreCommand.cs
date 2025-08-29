@@ -1,4 +1,5 @@
 using LeaderboardApi.DbOperations;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaderboardApi.Operations.GameScoreOps.Commands.Delete;
 
@@ -13,9 +14,9 @@ public class DeleteGameScoreCommand
         _dbContext = dbContext;
     }
 
-    public void Handle()
+    public async Task Handle()
     {
-        var gameScore = _dbContext.GameScores.SingleOrDefault(x => x.Id == Id);
+        var gameScore = await _dbContext.GameScores.SingleOrDefaultAsync(x => x.Id == Id);
 
         if (gameScore is null)
         {
@@ -30,7 +31,8 @@ public class DeleteGameScoreCommand
         }
         
         _dbContext.GameScores.Remove(gameScore);
-        _dbContext.Save();
+        
+        await _dbContext.SaveAsync();
     }
 
     private bool CheckIfPlayerExists(int id)

@@ -18,12 +18,12 @@ public class GetGameScoreById
         _mapper = mapper;
     }
     
-    public GameScoreViewModel Handle()
+    public async Task<GameScoreViewModel> Handle()
     {
-        var gameScore = _dbContext.GameScores
+        var gameScore = await _dbContext.GameScores
             .Include(x => x.Game)
             .Include(x => x.Player)
-            .SingleOrDefault(x => x.Id == Id);
+            .SingleOrDefaultAsync(x => x.Id == Id);
 
         if (gameScore is null)
         {
