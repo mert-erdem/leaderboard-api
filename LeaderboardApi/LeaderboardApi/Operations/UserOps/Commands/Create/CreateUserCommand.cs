@@ -3,6 +3,7 @@ using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
 using LeaderboardApi.TokenRelated;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeaderboardApi.Operations.UserOps.Commands.Create;
 
@@ -26,16 +27,23 @@ public class CreateUserCommand
     
     public async Task<TokenDto> Handle()
     {
-        var user = _mapper.Map<User>(Model);
+        var user = await _dbContext.Users.SingleOrDefaultAsync(x => x.Email == Model.Email);
+
+        if (user is not null)
+        {
+            throw new InvalidOperationException("User with given email already exists!");
+        }
         
-        user.CreatedAt = DateTime.UtcNow;
-        user.PasswordHash = _passwordHasher.HashPassword(user, Model.Password);
+        var newUser = _mapper.Map<User>(Model);
+        
+        newUser.CreatedAt = DateTime.UtcNow;
+        newUser.PasswordHash = _passwordHasher.HashPassword(newUser, Model.Password);
         
         // TODO: Create token for the user
-        var token = _tokenHandler.GenerateToken(user);
-        user.RefreshToken = token.RefreshToken;
+        var token = _tokenHandler.GenerateToken(newUser);
+        newUser.RefreshToken = token.RefreshToken;
         
-        _dbContext.Users.Add(user);
+        _dbContext.Users.Add(newUser);
         await _dbContext.SaveAsync();
         
         var tokenDto = new TokenDto(token.AccessToken, token.RefreshToken);
