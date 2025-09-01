@@ -3,6 +3,7 @@ using FluentValidation;
 using LeaderboardApi.DbOperations;
 using LeaderboardApi.Entities;
 using LeaderboardApi.Operations.UserOps.Commands.Create;
+using LeaderboardApi.Operations.UserOps.Commands.Delete;
 using LeaderboardApi.Operations.UserOps.Commands.Login;
 using LeaderboardApi.Operations.UserOps.Commands.Logout;
 using LeaderboardApi.Operations.UserOps.Commands.Refresh;
@@ -94,5 +95,21 @@ public class UserController : Controller
         var result = await command.Handle();
         
         return Ok(result);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var command = new DeleteUserCommand(_dbContext)
+        {
+            Id = id
+        };
+        
+        var validator = new DeleteUserCommandValidator();
+        await validator.ValidateAndThrowAsync(command);
+
+        await command.Handle();
+        
+        return Ok("User deleted!");
     }
 }
