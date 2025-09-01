@@ -26,7 +26,7 @@ public class GameScoreController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll([FromQuery] int gameId)
+    public async Task<IActionResult> GetAll([FromQuery] int gameId)
     {
         var query = new GetGameScoresQuery(_dbContext, _mapper)
         {
@@ -34,15 +34,15 @@ public class GameScoreController : ControllerBase
         };
 
         var validator = new GetGameScoresQueryValidator();
-        validator.ValidateAndThrow(query);
+        await validator.ValidateAndThrowAsync(query);
         
-        var result = query.Handle();
+        var result = await query.Handle();
         
         return Ok(result);
     }
 
     [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
         var query = new GetGameScoreById(_dbContext, _mapper)
         {
@@ -50,15 +50,15 @@ public class GameScoreController : ControllerBase
         };
         
         var validator = new GetGameScoreByIdValidator();
-        validator.ValidateAndThrow(query);
+        await validator.ValidateAndThrowAsync(query);
         
-        var result = query.Handle();
+        var result = await query.Handle();
         
         return Ok(result);
     }
 
     [HttpGet("top")]
-    public IActionResult GetTop([FromQuery] int gameId, [FromQuery] int count)
+    public async Task<IActionResult> GetTop([FromQuery] int gameId, [FromQuery] int count)
     {
         var query = new GetGameScoresTopQuery(_dbContext, _mapper)
         {
@@ -67,9 +67,9 @@ public class GameScoreController : ControllerBase
         };
         
         var validator = new GetGameScoresTopQueryValidator();
-        validator.ValidateAndThrow(query);
+        await validator.ValidateAndThrowAsync(query);
         
-        var result = query.Handle();
+        var result = await query.Handle();
         
         return Ok(result);
     }
@@ -91,7 +91,7 @@ public class GameScoreController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Add([FromBody] CreateGameScoreCommand.CreateGameScoreInputModel model)
+    public async Task<IActionResult> Add([FromBody] CreateGameScoreCommand.CreateGameScoreInputModel model)
     {
         var command = new CreateGameScoreCommand(_dbContext, _mapper)
         {
@@ -99,15 +99,15 @@ public class GameScoreController : ControllerBase
         };
 
         var validator = new CreateGameScoreCommandValidator();
-        validator.ValidateAndThrow(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        command.Handle();
+        await command.Handle();
         
         return Ok("Game score added!");
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult Update(int id, [FromBody] UpdateGameScoreCommand.UpdateGameScoreInputModel model)
+    public async Task<IActionResult> Update(int id, [FromBody] UpdateGameScoreCommand.UpdateGameScoreInputModel model)
     {
         var command = new UpdateGameScoreCommand(_dbContext, _mapper)
         {
@@ -116,15 +116,15 @@ public class GameScoreController : ControllerBase
         };
         
         var validator = new UpdateGameScoreCommandValidator();
-        validator.ValidateAndThrow(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        command.Handle();
+        await command.Handle();
         
         return Ok("Game score updated!");
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
         var command = new DeleteGameScoreCommand(_dbContext)
         {
@@ -132,9 +132,9 @@ public class GameScoreController : ControllerBase
         };
         
         var validator = new DeleteGameScoreCommandValidator();
-        validator.ValidateAndThrow(command);
+        await validator.ValidateAndThrowAsync(command);
         
-        command.Handle();
+        await command.Handle();
         
         return Ok("Game score deleted!");
     }
