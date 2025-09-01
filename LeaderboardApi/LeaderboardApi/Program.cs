@@ -37,6 +37,12 @@ builder.Services.AddSingleton<ILoggerService, ConsoleLoggerService>();
 builder.Services.AddSingleton<TokenHandler>();
 builder.Services.AddSingleton<PasswordHasher<User>>();
 
+// To load user secrets from the project:
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddUserSecrets<Program>(optional: true)
+    .AddEnvironmentVariables();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
